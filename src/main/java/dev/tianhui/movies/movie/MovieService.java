@@ -1,4 +1,4 @@
-package dev.tianhui.movies;
+package dev.tianhui.movies.movie;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

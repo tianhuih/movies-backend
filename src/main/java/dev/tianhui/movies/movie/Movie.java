@@ -1,5 +1,6 @@
-package dev.tianhui.movies;
+package dev.tianhui.movies.movie;
 
+import dev.tianhui.movies.review.Review;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
