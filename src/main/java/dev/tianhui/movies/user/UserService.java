@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
     }
 
     public String signUpUser(User user) {
-        boolean emailExists = userRepository.findByUsername(user.getEmail()).isPresent();
+        boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
         if (emailExists) {
             throw new IllegalStateException("email already taken!");
         }
@@ -42,7 +42,6 @@ public class UserService implements UserDetailsService {
         user.setPassword(encodedPassword);
         userRepository.save(user);
         String token = UUID.randomUUID().toString();
-
         return token;
     }
     public int enableUser(String username) {
