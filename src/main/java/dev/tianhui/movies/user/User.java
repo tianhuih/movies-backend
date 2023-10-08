@@ -36,8 +36,8 @@ public class User implements UserDetails {
     @Size(max = 120)
     private String password;
     private UserRole role;
-    private Boolean isLocked;
-    private Boolean isEnabled;
+    private Boolean isLocked = false;
+    private Boolean isEnabled = false;
 
     public User(String username, String email, String password, UserRole role) {
         this.username = username;
