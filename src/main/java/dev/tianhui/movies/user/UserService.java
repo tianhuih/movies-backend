@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService {
     }
     public int enableUser(String username) {
         Query query = new Query(Criteria.where("username").is(username));
-        Update update = new Update().set("enabled", true);
+        Update update = new Update().set("isEnabled", true);
         UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
         return (int) result.getModifiedCount();
     }
