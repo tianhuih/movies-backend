@@ -1,5 +1,6 @@
-package dev.tianhui.movies;
+package dev.tianhui.movies.review;
 
+import dev.tianhui.movies.movie.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

@@ -1,4 +1,4 @@
-package dev.tianhui.movies;
+package dev.tianhui.movies.review;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

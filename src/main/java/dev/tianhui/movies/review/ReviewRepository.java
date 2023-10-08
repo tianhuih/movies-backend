@@ -1,4 +1,4 @@
-package dev.tianhui.movies;
+package dev.tianhui.movies.review;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
