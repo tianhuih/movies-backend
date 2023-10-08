@@ -1,6 +1,7 @@
 package dev.tianhui.movies.user;
 
 import com.mongodb.client.result.UpdateResult;
+import dev.tianhui.movies.email.EmailService;
 import dev.tianhui.movies.registration.token.ConfirmationToken;
 import dev.tianhui.movies.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
+    private final EmailService emailService;
     @Autowired
     private MongoTemplate mongoTemplate;
     @Override
@@ -34,9 +37,16 @@ public class UserService implements UserDetailsService {
     }
 
     public String signUpUser(User user) {
-        boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
-        if (emailExists) {
-            throw new IllegalStateException("email already taken!");
+        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
+        if (optionalUser.isPresent()) {
+            // check if attributes are the same
+            boolean sameUsername = optionalUser.get().getUsername().equals(user.getUsername());
+            boolean isEnabled = optionalUser.get().getIsEnabled();
+            // only throw exception if it is a different user
+            // if it is the same user with email not confirmed, we continue to send confirmation email
+            if (!sameUsername || isEnabled) {
+                throw new IllegalStateException("email already taken!");
+            }
         }
         boolean userNameExists = userRepository.findByUsername(user.getUsername()).isPresent();
         if (userNameExists) {
@@ -48,7 +58,6 @@ public class UserService implements UserDetailsService {
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-        // todo: send email
         return token;
     }
     public int enableUser(String username) {
