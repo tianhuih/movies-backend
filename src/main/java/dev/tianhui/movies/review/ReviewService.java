@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -20,14 +21,26 @@ public class ReviewService {
     @Autowired
     private MovieService movieService;
 
-    public Review createReview(String reviewBody, String imdbId, String userId) {
+    public Review postReview(String reviewBody, String imdbId, String userId) {
         User currUser = mongoTemplate.findById(new ObjectId(userId), User.class);
         Optional<Movie> currMovie = movieService.singleMovie(imdbId);
+        if (currUser == null) {
+            throw new IllegalStateException("user not found!");
+        }
         if (!currMovie.isPresent()) {
             throw new IllegalStateException("imdb id not found!");
         }
-        Review review = reviewRepository.insert(new Review(currMovie.get(), currUser, reviewBody));
-        return review;
+        List<Review> userReviewsForMovie = getByUserId(userId).stream()
+                .filter(review -> review.getRMovie().equals(currMovie.get()))
+                .collect(Collectors.toList());
+        if (!userReviewsForMovie.isEmpty()) {
+            Review oldReview = userReviewsForMovie.get(0);
+            oldReview.setBody(reviewBody);
+            return reviewRepository.save(oldReview);
+        } else {
+            Review review = new Review(currMovie.get(), currUser, reviewBody);
+            return reviewRepository.insert(review);
+        }
     }
 
     public List<Review> getByIMDBId(String imdbId) {
