@@ -29,6 +29,11 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+      env:
+        MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
+        MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
+        MONGO_USER: ${{ secrets.MONGO_USER }}
+        MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
