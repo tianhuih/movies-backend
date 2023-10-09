@@ -38,4 +38,9 @@ public class ReviewService {
         return reviewRepository.findByrMovie(currMovie.get());
     }
 
+    public List<Review> getByUserId(String userId) {
+        User currUser = mongoTemplate.findById(new ObjectId(userId), User.class);
+        return reviewRepository.findByrUser(currUser);
+    }
+
 }

@@ -22,8 +22,13 @@ public class ReviewController {
         );
     }
 
-    @GetMapping
+    @GetMapping(params = "imdbId")
     public ResponseEntity<List<Review>> getReviewsByIMDBId(@RequestParam String imdbId) {
         return new ResponseEntity<List<Review>>(reviewService.getByIMDBId(imdbId), HttpStatus.OK);
+    }
+
+    @GetMapping(params = "userId")
+    public ResponseEntity<List<Review>> getReviewsByUserId(@RequestParam String userId) {
+        return new ResponseEntity<List<Review>>(reviewService.getByUserId(userId), HttpStatus.OK);
     }
 }
