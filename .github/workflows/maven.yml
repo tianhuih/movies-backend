@@ -18,7 +18,11 @@ jobs:
   build:
 
     runs-on: self-hosted
-
+    env:
+      MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
+      MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
+      MONGO_USER: ${{ secrets.MONGO_USER }}
+      MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -29,18 +33,9 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-      env:
-        MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
-        MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
-        MONGO_USER: ${{ secrets.MONGO_USER }}
-        MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
     - name: Execute Jar File
       run: sudo kill -9 `sudo lsof -t -i:8080` & sudo java -jar /home/ec2-user/actions-runner/_work/movies-backend/movies-backend/target/movies-0.0.1-SNAPSHOT.jar --server.address=0.0.0.0
-      env:
-        MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
-        MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
-        MONGO_USER: ${{ secrets.MONGO_USER }}
-        MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #    - name: Update dependency graph
 #      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
