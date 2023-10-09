@@ -1,11 +1,17 @@
 package dev.tianhui.movies.review;
 
 import dev.tianhui.movies.movie.Movie;
+import dev.tianhui.movies.movie.MovieService;
+import dev.tianhui.movies.user.User;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -13,13 +19,50 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
+    @Autowired
+    private MovieService movieService;
 
-    public Review createReview(String reviewBody, String imdbId) {
-        Review review = reviewRepository.insert(new Review(reviewBody));
-        mongoTemplate.update(Movie.class)
-                .matching(Criteria.where("imdbId").is(imdbId))
-                .apply(new Update().push("reviewIds").value(review))
-                .first();
-        return review;
+    public Review postReview(String reviewBody, String imdbId, String userId) {
+        User currUser = mongoTemplate.findById(new ObjectId(userId), User.class);
+        Optional<Movie> currMovie = movieService.singleMovie(imdbId);
+        if (currUser == null) {
+            throw new IllegalStateException("user not found!");
+        }
+        if (!currMovie.isPresent()) {
+            throw new IllegalStateException("imdb id not found!");
+        }
+        List<Review> userReviewsForMovie = reviewRepository.findByUser(currUser).stream()
+                .filter(review -> review.getMovie().equals(currMovie.get()))
+                .collect(Collectors.toList());
+        if (!userReviewsForMovie.isEmpty()) {
+            Review oldReview = userReviewsForMovie.get(0);
+            oldReview.setBody(reviewBody);
+            return reviewRepository.save(oldReview);
+        } else {
+            Review review = new Review(currMovie.get(), currUser, reviewBody);
+            return reviewRepository.insert(review);
+        }
     }
+
+    public List<Review> getByIMDBId(String imdbId) {
+        Optional<Movie> currMovie = movieService.singleMovie(imdbId);
+        if (!currMovie.isPresent()) {
+            throw new IllegalStateException("imdb id not found!");
+        }
+        return reviewRepository.findByMovie(currMovie.get());
+    }
+
+    public List<ReviewMovieDTO> getByUserId(String userId) {
+        User currUser = mongoTemplate.findById(new ObjectId(userId), User.class);
+        List<Review> reviews = reviewRepository.findByUser(currUser);
+        List<ReviewMovieDTO> res = new ArrayList<>();
+        for (Review review : reviews) {
+            res.add(new ReviewMovieDTO(
+                    review.getMovie(),
+                    review.getRatings(),
+                    review.getBody()));
+        }
+        return res;
+    }
+
 }

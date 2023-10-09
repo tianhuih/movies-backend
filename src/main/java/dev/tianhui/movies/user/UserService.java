@@ -4,6 +4,8 @@ import com.mongodb.client.result.UpdateResult;
 import dev.tianhui.movies.email.EmailService;
 import dev.tianhui.movies.registration.token.ConfirmationToken;
 import dev.tianhui.movies.registration.token.ConfirmationTokenService;
+import dev.tianhui.movies.review.ReviewMovieDTO;
+import dev.tianhui.movies.review.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,12 +31,27 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
+    private final ReviewService reviewService;
     @Autowired
     private MongoTemplate mongoTemplate;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " not found"));
+    }
+
+    public UserHomepageDTO getHomepageByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("username not found!");
+        }
+        User currUser = user.get();
+        List<ReviewMovieDTO> reviewsByUser = reviewService.getByUserId(currUser.getId().toString());
+        return new UserHomepageDTO(
+                currUser.getUsername(),
+                currUser.getEmail(),
+                currUser.isEnabled(),
+                reviewsByUser);
     }
 
     public String signUpUser(User user) {

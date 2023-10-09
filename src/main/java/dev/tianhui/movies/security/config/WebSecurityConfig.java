@@ -4,6 +4,7 @@ import dev.tianhui.movies.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,10 +27,14 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                .requestMatchers("/api/v*/register/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated().and().httpBasic(Customizer.withDefaults());
+                    .requestMatchers("/api/v*/user/**",
+                            "/api/v*/register/**",
+                            "/api/v*/reviews/**",
+                            "/api/v*/movies/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/v*/reviews/**").authenticated()
+                    .anyRequest().authenticated()
+                .and()
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
