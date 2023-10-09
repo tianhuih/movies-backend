@@ -2,12 +2,14 @@ package dev.tianhui.movies.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +27,8 @@ public class User implements UserDetails {
 
     @NotBlank
     @Size(max = 20)
+    @Pattern(regexp = "^[a-zA-Z0-9._-]+$", message = "Alias should only contain letters, numbers, dots, underscores, or hyphens.")
+    @Indexed(unique = true)
     private String username;
 
     @NotBlank

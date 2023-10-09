@@ -27,8 +27,10 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                    .requestMatchers(HttpMethod.POST, "/api/v*/register/**").permitAll()
-                    .requestMatchers("/api/v*/reviews/**", "/api/v*/movies/**").permitAll()
+                    .requestMatchers("/api/v*/user/**",
+                            "/api/v*/register/**",
+                            "/api/v*/reviews/**",
+                            "/api/v*/movies/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v*/reviews/**").authenticated()
                     .anyRequest().authenticated()
                 .and()
