@@ -35,7 +35,7 @@ jobs:
         MONGO_USER: ${{ secrets.MONGO_USER }}
         MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
     - name: Execute Jar File
-      run: sudo kill -9 `sudo lsof -t -i:8080` & sudo java -jar /home/ec2-user/actions-runner/_work/movies-backend/movies-backend/target/movies-0.0.1-SNAPSHOT.jar --server.address=0.0.0.0 > app.log 2>&1 &&
+      run: sudo kill -9 `sudo lsof -t -i:8080` & sudo java -jar /home/ec2-user/actions-runner/_work/movies-backend/movies-backend/target/movies-0.0.1-SNAPSHOT.jar --server.address=0.0.0.0 > app.log 2>&1 &
       env:
         MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
         MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
