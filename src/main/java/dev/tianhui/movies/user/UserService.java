@@ -4,7 +4,7 @@ import com.mongodb.client.result.UpdateResult;
 import dev.tianhui.movies.email.EmailService;
 import dev.tianhui.movies.registration.token.ConfirmationToken;
 import dev.tianhui.movies.registration.token.ConfirmationTokenService;
-import dev.tianhui.movies.review.Review;
+import dev.tianhui.movies.review.ReviewMovieDTO;
 import dev.tianhui.movies.review.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("username not found!");
         }
         User currUser = user.get();
-        List<Review> reviewsByUser = reviewService.getByUserId(currUser.getId().toString());
+        List<ReviewMovieDTO> reviewsByUser = reviewService.getByUserId(currUser.getId().toString());
         return new UserHomepageDTO(
                 currUser.getUsername(),
                 currUser.getEmail(),

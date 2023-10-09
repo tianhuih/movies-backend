@@ -34,7 +34,7 @@ public class ReviewController {
     }
 
     @GetMapping(params = "userId")
-    public ResponseEntity<List<Review>> getReviewsByUserId(@RequestParam String userId) {
-        return new ResponseEntity<List<Review>>(reviewService.getByUserId(userId), HttpStatus.OK);
+    public ResponseEntity<List<ReviewMovieDTO>> getReviewsByUserId(@RequestParam String userId) {
+        return new ResponseEntity<List<ReviewMovieDTO>>(reviewService.getByUserId(userId), HttpStatus.OK);
     }
 }

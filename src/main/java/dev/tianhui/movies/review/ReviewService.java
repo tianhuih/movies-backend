@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class ReviewService {
         if (!currMovie.isPresent()) {
             throw new IllegalStateException("imdb id not found!");
         }
-        List<Review> userReviewsForMovie = getByUserId(userId).stream()
+        List<Review> userReviewsForMovie = reviewRepository.findByUser(currUser).stream()
                 .filter(review -> review.getMovie().equals(currMovie.get()))
                 .collect(Collectors.toList());
         if (!userReviewsForMovie.isEmpty()) {
@@ -51,9 +52,17 @@ public class ReviewService {
         return reviewRepository.findByMovie(currMovie.get());
     }
 
-    public List<Review> getByUserId(String userId) {
+    public List<ReviewMovieDTO> getByUserId(String userId) {
         User currUser = mongoTemplate.findById(new ObjectId(userId), User.class);
-        return reviewRepository.findByUser(currUser);
+        List<Review> reviews = reviewRepository.findByUser(currUser);
+        List<ReviewMovieDTO> res = new ArrayList<>();
+        for (Review review : reviews) {
+            res.add(new ReviewMovieDTO(
+                    review.getMovie(),
+                    review.getRatings(),
+                    review.getBody()));
+        }
+        return res;
     }
 
 }

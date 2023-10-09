@@ -1,6 +1,6 @@
 package dev.tianhui.movies.user;
 
-import dev.tianhui.movies.review.Review;
+import dev.tianhui.movies.review.ReviewMovieDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,5 +12,5 @@ public class UserHomepageDTO {
     private String username;
     private String email;
     private boolean isEnabled;
-    private List<Review> reviews;
+    private List<ReviewMovieDTO> reviews;
 }
