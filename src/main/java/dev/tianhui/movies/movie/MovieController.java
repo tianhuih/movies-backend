@@ -1,5 +1,6 @@
 package dev.tianhui.movies.movie;
 
+import dev.tianhui.movies.review.ReviewController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,21 @@ import java.util.Optional;
 public class MovieController {
     @Autowired
     private MovieService movieService;
+    @Autowired
+    private ReviewController reviewController;
     @GetMapping
     public ResponseEntity<List<Movie>> getAllMovies() {
         return new ResponseEntity<List<Movie>>(movieService.allMovies(), HttpStatus.OK);
     }
 
     @GetMapping("/{imdbId}")
-    public ResponseEntity<Optional<Movie>> getMovie(@PathVariable String imdbId) {
-        return new ResponseEntity<Optional<Movie>>(movieService.singleMovie(imdbId), HttpStatus.OK);
+    public ResponseEntity<MoviePageDTO> getMoviePage(@PathVariable String imdbId) {
+        Optional<Movie> movie = movieService.singleMovie(imdbId);
+        if (movie.isEmpty()) {
+            throw new IllegalStateException("imdb id not found!");
+        }
+        MoviePageDTO result = new MoviePageDTO(movie.get(), reviewController.getReviewsByIMDBId(imdbId).getBody());
+        return new ResponseEntity<MoviePageDTO>(result, HttpStatus.OK);
     }
 
 

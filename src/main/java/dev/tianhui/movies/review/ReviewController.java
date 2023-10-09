@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +24,13 @@ public class ReviewController {
     }
 
     @GetMapping(params = "imdbId")
-    public ResponseEntity<List<Review>> getReviewsByIMDBId(@RequestParam String imdbId) {
-        return new ResponseEntity<List<Review>>(reviewService.getByIMDBId(imdbId), HttpStatus.OK);
+    public ResponseEntity<List<ReviewUsernameDTO>> getReviewsByIMDBId(@RequestParam String imdbId) {
+        List<Review> reviews = reviewService.getByIMDBId(imdbId);
+        List<ReviewUsernameDTO> result = new ArrayList<>();
+        for (Review review : reviews) {
+            result.add(new ReviewUsernameDTO(review.getUser().getUsername(), review.getRatings(), review.getBody()));
+        }
+        return new ResponseEntity<List<ReviewUsernameDTO>>(result, HttpStatus.OK);
     }
 
     @GetMapping(params = "userId")
