@@ -27,12 +27,12 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                    .requestMatchers(HttpMethod.GET, "/api/v*/reviews/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/v*/register/**").permitAll()
+                    .requestMatchers("/api/v*/reviews/**", "/api/v*/movies/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v*/reviews/**").authenticated()
-                    .requestMatchers("/api/v*/register/**", "/api/v*/movies/**").permitAll()
-                .anyRequest().authenticated()
-                .and().
-                httpBasic(Customizer.withDefaults());
+                    .anyRequest().authenticated()
+                .and()
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
