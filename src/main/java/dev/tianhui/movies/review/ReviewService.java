@@ -31,7 +31,7 @@ public class ReviewService {
             throw new IllegalStateException("imdb id not found!");
         }
         List<Review> userReviewsForMovie = getByUserId(userId).stream()
-                .filter(review -> review.getRMovie().equals(currMovie.get()))
+                .filter(review -> review.getMovie().equals(currMovie.get()))
                 .collect(Collectors.toList());
         if (!userReviewsForMovie.isEmpty()) {
             Review oldReview = userReviewsForMovie.get(0);
@@ -48,12 +48,12 @@ public class ReviewService {
         if (!currMovie.isPresent()) {
             throw new IllegalStateException("imdb id not found!");
         }
-        return reviewRepository.findByrMovie(currMovie.get());
+        return reviewRepository.findByMovie(currMovie.get());
     }
 
     public List<Review> getByUserId(String userId) {
         User currUser = mongoTemplate.findById(new ObjectId(userId), User.class);
-        return reviewRepository.findByrUser(currUser);
+        return reviewRepository.findByUser(currUser);
     }
 
 }

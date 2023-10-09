@@ -22,13 +22,13 @@ public class Review {
 
     private double ratings;
     @DocumentReference
-    private Movie rMovie;
+    private Movie movie;
     @DocumentReference
-    private User rUser;
+    private User user;
 
-    public Review(Movie rMovie, User rUser, String body) {
-        this.rMovie = rMovie;
-        this.rUser = rUser;
+    public Review(Movie movie, User user, String body) {
+        this.movie = movie;
+        this.user = user;
         this.body = body;
     }
 }
