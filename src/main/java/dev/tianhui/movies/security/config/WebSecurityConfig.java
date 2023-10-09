@@ -26,10 +26,11 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                .requestMatchers("/api/v*/register/**")
+                .requestMatchers("/api/v*/register/**", "/api/v*/movies/**", "/api/v*/reviews/**")
                 .permitAll()
                 .anyRequest()
-                .authenticated().and().httpBasic(Customizer.withDefaults());
+                .authenticated()
+                .and().httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
