@@ -4,17 +4,17 @@ A backend system for managing movies, users, and reviews with Java Spring Boot a
 
 ### Features
 
-- **CRUD Operations**: users can suggest edit for movies, and post and edit their movie rating and reviews. 
-- **User Authorization & Authentication**: complete registration and authorization and authentication process with email verification links and social media login (OAuth).
-- **Continuous Integration & Deployment**: integrated with GitHub Actions to automatically run and deploy on AWS EC2.
-- **Open API Documentation**: manage and test RestfulAPIs with Springfox Swagger and Postman. 
+- **MVC Architecture**: utilized the model-view-controller architecture to build RESTful APIs that allow users to search for movies and conduct CRUD operations on the movies and reviews objects.
+- **User Authorization & Authentication**: implemented complete registration, authorization and authentication process with email verification (Spring Security) and social media login (OAuth).
+- **Continuous Integration & Deployment**: integrated with GitHub Actions to automatically run and deploy the app on AWS EC2.
+- **Open API Documentation**: manage and test RestfulAPIs with Springfox Swagger and Postman.
 
 ### Technologies
 
-- Spring Boot: For the core backend framework.
-- Spring Security: Ensuring safe user authentication and authorization.
-- MongoDB: NoSQL database for flexible data storage.
-- Springfox Swagger: For API documentation.
+- **Spring Boot**: For the core backend framework.
+- **Spring Security**: Ensuring safe user authentication and authorization.
+- **MongoDB**: NoSQL database for flexible data storage.
+- **Swagger**: For API documentation.
 
 ### Getting Started
 
