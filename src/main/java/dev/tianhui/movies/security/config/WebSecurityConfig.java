@@ -35,6 +35,7 @@ public class WebSecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/api/v*/reviews/**").authenticated()
                     .anyRequest().authenticated()
                 .and()
+                .oauth2Login(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults());
         return http.build();
     }
